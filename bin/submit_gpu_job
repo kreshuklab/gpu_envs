@@ -10,7 +10,7 @@ from datetime import datetime
 TWO_DAYS = 2 * 24 * 60
 
 
-def write_slurm_template(script, out_path,
+def write_slurm_template(script, out_path, arguments,
                          n_threads, gpu_type, n_gpus,
                          mem_limit, time_limit, qos,
                          mail_address, exclude_nodes):
@@ -35,8 +35,8 @@ def write_slurm_template(script, out_path,
     slurm_template += ("\n"
                        "source activate_gpu_env\n"
                        "\n"
-                       "export TRAIN_ON_CLUSTER=1\n"  # we set this env variable, so that script know we're on slurm
-                       "python %s $@ \n") % script
+                       "export ON_CLUSTER=1\n"  # we set this env variable, so that script know we're on slurm
+                       "$GPU_PY %s %s \n") % (script, arguments)
     with open(out_path, 'w') as f:
         f.write(slurm_template)
 
@@ -52,25 +52,21 @@ def submit_slurm(script, input_, n_threads=7, n_gpus=1,
     tmp_folder = os.path.expanduser('~/.gpu_submissions')
     os.makedirs(tmp_folder, exist_ok=True)
 
+    arguments = " ".join(input_)
     print("Submitting gpu script %s to cluster" % script)
-    print("with arguments %s" % " ".join(input_))
+    print("with arguments:", arguments)
 
     script_name = os.path.split(script)[1]
     dt = datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
-    tmp_name = os.path.splitext(script_name)[0] + dt
-    batch_script = os.path.join(tmp_folder, '%s.sh' % tmp_name)
-    log = os.path.join(tmp_folder, '%s.log' % tmp_name)
-    err = os.path.join(tmp_folder, '%s.err' % tmp_name)
+    batch_script = os.path.join(tmp_folder, f'{os.path.splitext(script_name)[0]}_{dt}.sh')
 
     print("Batch script saved at", batch_script)
-    print("Log will be written to %s, error log to %s" % (log, err))
-    write_slurm_template(script, batch_script,
+    write_slurm_template(script, batch_script, arguments,
                          int(n_threads), gpu_type, int(n_gpus),
                          mem_limit, int(time_limit), qos, mail_address,
                          exclude_nodes=exclude_nodes)
 
-    cmd = ['sbatch', '-o', log, '-e', err, '-J', script_name, batch_script]
-    cmd.extend(input_)
+    cmd = ['sbatch', '-J', script_name, batch_script]
     subprocess.run(cmd)
 
 
@@ -79,9 +75,9 @@ def scrape_kwargs(input_):
     kwarg_names = [name for name in params
                    if params[name].default != inspect._empty]
     kwarg_positions = [i for i, inp in enumerate(input_)
-                       if inp in kwarg_names]
+                       if inp.lstrip('-') in kwarg_names]
 
-    kwargs = {input_[i]: input_[i + 1] for i in kwarg_positions}
+    kwargs = {input_[i].lstrip('-'): input_[i + 1] for i in kwarg_positions}
 
     kwarg_positions += [i + 1 for i in kwarg_positions]
     input_ = [inp for i, inp in enumerate(input_) if i not in kwarg_positions]

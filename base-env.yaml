@@ -17,6 +17,7 @@ dependencies:
   - scikit-image
   - scikit-learn
   - vigra
+  - tensorboard
   - torchvision
   - tqdm
   - zarr

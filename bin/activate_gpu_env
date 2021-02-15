@@ -1,6 +1,9 @@
 # purge models for a clean environment
 module purge
 
+# make sure to use the correct python
+unalias python
+
 # TODO there should be an easier way to do this
 # load gcc to find out which architecture we are on
 module load GCC
@@ -9,8 +12,20 @@ ARCH_NAME=$(basename $(dirname $(dirname $(dirname $(dirname $(dirname $ARCH_NAM
 
 # activate the correct conda environment
 ENV_NAME="cluster_gpu_$ARCH_NAME"
-source activate $ENV_NAME
+
+# activate is not very reliable in getting the right python here, so we construct our path from the base env instead
+# source activate $ENV_NAME
+
+# go to base env to make sure the next activate works
+source activate
 PY=$(which python)
+PY=$(dirname $(dirname ${PY}))
+PY="${PY}/envs/${ENV_NAME}/bin/python"
+
+source activate $ENV_NAME
+
+# for some reason the alias doesn't work in sbatch, so export an alternate command
+export GPU_PY=$PY
 
 # load the pytorch module and reset the python interpreter to conda
 module load PyTorch

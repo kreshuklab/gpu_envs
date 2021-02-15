@@ -1,0 +1,17 @@
+# purge models for a clean environment
+module purge
+
+# TODO there should be an easier way to do this
+# load gcc to find out which architecture we are on
+module load GCC
+ARCH_NAME=$(which gcc)
+ARCH_NAME=$(basename $(dirname $(dirname $(dirname $(dirname $(dirname $ARCH_NAME))))))
+
+# activate the correct conda environment
+ENV_NAME="cluster_gpu_$ARCH_NAME"
+source activate $ENV_NAME
+PY=$(which python)
+
+# load the pytorch module and reset the python interpreter to conda
+module load PyTorch
+alias python=$PY

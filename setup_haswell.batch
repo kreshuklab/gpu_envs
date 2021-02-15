@@ -1,0 +1,10 @@
+#! /bin/bash
+#SBATCH -A kreshuk
+#SBATCH -N 1
+#SBATCH --mem 8G
+#SBATCH -t 0-1:00
+#SBATCH -p gpu
+#SBATCH -w gpu[4-5]
+
+source activate cluster_gpu_haswell
+python setup_env.py

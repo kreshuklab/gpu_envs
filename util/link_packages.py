@@ -25,7 +25,8 @@ def link_noarch_packages():
         '/g/kreshuk/pape/Work/my_projects/super_embeddings',
         '/g/kreshuk/pape/Work/my_projects/elf',
         '/g/kreshuk/pape/Work/my_projects/cluster_tools',
-        '/g/kreshuk/pape/Work/my_projects/pybdv'
+        '/g/kreshuk/pape/Work/my_projects/pybdv',
+        '/g/kreshuk/pape/Work/my_projects/torch-em'
     ]
     names = [
         'inferno',
@@ -34,7 +35,8 @@ def link_noarch_packages():
         'embed_utils',
         'elf',
         'cluster_tools',
-        'pybdv'
+        'pybdv',
+        'torch_em'
     ]
     assert len(roots) == len(names)
     for name, root in zip(names, roots):

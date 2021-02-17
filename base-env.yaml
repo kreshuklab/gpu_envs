@@ -9,6 +9,7 @@ dependencies:
   - dill
   - h5py
   - luigi
+  - pip
   - python 3.8
   - pytorch 1.7.1
   - pyyaml
@@ -21,3 +22,5 @@ dependencies:
   - torchvision
   - tqdm
   - zarr
+  - pip:
+      - kornia

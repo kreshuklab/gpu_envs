@@ -12,7 +12,7 @@ def set_up_env(replace, link):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--replace', '-r', default=1)
-    parser.add_argument('--link', '-l', default=1)
+    parser.add_argument('--replace', '-r', default=1, type=int)
+    parser.add_argument('--link', '-l', default=1, type=int)
     args = parser.parse_args()
     set_up_env(bool(args.replace), bool(args.link))

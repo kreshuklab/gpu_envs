@@ -30,5 +30,19 @@ You can modify the environment that wil be set up by:
 
 ## Using the environments
 
-Once set up, you can activate the correct gpu environment for your current architecture via `source bin/activate_gpu_env` (it's good to add this to the `PATH` so it can be called from everywhere).
-The script `bin/submit_gpu_job` enables submitting jobs to the cluster and automatically enabling the right environment.
+Once set up, you can activate the correct gpu environment for your current architecture via
+````
+source bin/activate_gpu_env
+````
+(it's a good idea to add this to the `PATH` so it can be called from everywhere).
+
+To submit jobs to the cluster with the correct environment, you can use the scrpt `bin/submit_gpu_job`
+```
+bin/submit_gpu_job my_script.py arg1 arg2 ...
+```
+You can also override the default job settings, e.g. the type of gpu used.
+```
+bin/submit_gpu_job my_script.py arg1 arg2 ... --gpu_type A100
+```
+
+All the settings that are exposed as [arguments here](https://github.com/kreshuklab/gpu_envs/blob/main/bin/submit_gpu_job#L44-L48) can be set in this manner.

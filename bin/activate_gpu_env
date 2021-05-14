@@ -17,7 +17,8 @@ ENV_NAME="cluster_gpu_$ARCH_NAME"
 # activate is not very reliable in getting the right python here, so we construct our path from the base env instead
 # source activate $ENV_NAME
 
-# go to base env to make sure the next activate works
+# go to base env and derive the python executable of $ENV_NAME from it
+# (source activate $ENV_NAME && PY=$(which python) is not 100% reliable, because it sometimes picks up the base env's python)
 source activate
 
 PY=$(which python)
@@ -28,6 +29,7 @@ PIP=$(which pip)
 PIP=$(dirname $(dirname ${PIP}))
 PIP="${PIP}/envs/${ENV_NAME}/bin/pip"
 
+# activate the correct env
 source activate $ENV_NAME
 
 # for some reason the alias doesn't work in sbatch, so export an alternate command

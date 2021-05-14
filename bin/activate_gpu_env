@@ -1,8 +1,9 @@
 # purge models for a clean environment
 module purge
 
-# make sure to use the correct python
+# make sure to use the correct python and pip
 unalias python
+unalias pip
 
 # TODO there should be an easier way to do this
 # load gcc to find out which architecture we are on
@@ -18,9 +19,14 @@ ENV_NAME="cluster_gpu_$ARCH_NAME"
 
 # go to base env to make sure the next activate works
 source activate
+
 PY=$(which python)
 PY=$(dirname $(dirname ${PY}))
 PY="${PY}/envs/${ENV_NAME}/bin/python"
+
+PIP=$(which pip)
+PIP=$(dirname $(dirname ${PIP}))
+PIP="${PIP}/envs/${ENV_NAME}/bin/pip"
 
 source activate $ENV_NAME
 
@@ -30,3 +36,4 @@ export GPU_PY=$PY
 # load the pytorch module and reset the python interpreter to conda
 module load PyTorch
 alias python=$PY
+alias pip=$PIP

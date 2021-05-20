@@ -1,9 +1,9 @@
 # purge models for a clean environment
 module purge
 
-# make sure to use the correct python and pip
-unalias python
-unalias pip
+# make sure to use the correct python and pip (unalias if 'python'/'pip' exists)
+[[ $(type -t python) == "alias" ]] && unalias python
+[[ $(type -t pip) == "alias" ]] && unalias pip
 
 # TODO there should be an easier way to do this
 # load gcc to find out which architecture we are on

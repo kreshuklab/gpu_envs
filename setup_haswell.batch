@@ -7,6 +7,6 @@
 #SBATCH -p gpu
 #SBATCH -w gpu4
 
-source activate cluster_gpu_haswell
+source activate "$1_haswell"
 python setup_env.py
 ./util/install_apex.sh

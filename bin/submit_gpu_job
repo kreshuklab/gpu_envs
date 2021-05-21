@@ -48,7 +48,7 @@ def write_slurm_template(script, out_path, arguments,
         slurm_template += f"#SBATCH --array={array}"
 
     slurm_template += ("\n"
-                       f"source {Path(__file__).parent / 'activate_gpu_env'}\n"
+                       f"source {Path(__file__).parent / 'activate_gpu_env'} {os.environ.get('CLUSTER_GPU_ENV', 'cluster_gpu')}\n"
                        "\n"
                        "export ON_CLUSTER=1\n"  # we set this env variable, so that script know we're on slurm
                        "$GPU_PY %s %s \n") % (script, arguments)

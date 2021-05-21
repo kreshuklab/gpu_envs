@@ -1,11 +1,13 @@
 #! /bin/bash
 
 ARCH_NAME=$1
-ENV_NAME="cluster_gpu_$ARCH_NAME"
+if [ $# == 2 ]; then  # check if an alternative base-env.yaml was specified
+  conda env create -f "$2"
+else
+  conda env create -f base-env.yaml -n "cluster_gpu_$ARCH_NAME"
+fi
 
-# if the environment is already present this will fail
-conda env create -f base-env.yaml -n $ENV_NAME
-
+# if the conda environment was already present its creation will have failed
 ENV_CREATED=$?
 if [ $ENV_CREATED != 0 ]; then
     exit $ENV_CREATED

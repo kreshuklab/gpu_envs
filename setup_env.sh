@@ -7,7 +7,7 @@ else
   ENV_NAME="cluster_gpu"
 fi
 
-if [ $# -gt 3 ]; then
+if [ $# -gt 2 ]; then
   BASE_ENV=$3
 else
   BASE_ENV="base-env.yaml"

@@ -1,9 +1,9 @@
 # purge models for a clean environment
 module purge
 
-# make sure to use the correct python and pip
-unalias python
-unalias pip
+# make sure to use the correct python and pip (unalias if 'python'/'pip' exists)
+[[ $(type -t python) == "alias" ]] && unalias python
+[[ $(type -t pip) == "alias" ]] && unalias pip
 
 # TODO there should be an easier way to do this
 # load gcc to find out which architecture we are on
@@ -12,7 +12,13 @@ ARCH_NAME=$(which gcc)
 ARCH_NAME=$(basename $(dirname $(dirname $(dirname $(dirname $(dirname $ARCH_NAME))))))
 
 # activate the correct conda environment
-ENV_NAME="cluster_gpu_$ARCH_NAME"
+if [ $# == 1 ]; then
+  ENV_NAME=$1
+else
+  ENV_NAME="cluster_gpu"
+fi
+
+ENV_NAME="${ENV_NAME}_$ARCH_NAME"
 
 # activate is not very reliable in getting the right python here, so we construct our path from the base env instead
 # source activate $ENV_NAME

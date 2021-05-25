@@ -7,6 +7,6 @@
 #SBATCH -p gpu
 #SBATCH -w gpu8
 
-source activate cluster_gpu_skylake
+source activate "$1_skylake"
 python setup_env.py
 ./util/install_apex.sh

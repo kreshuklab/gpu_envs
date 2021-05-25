@@ -13,19 +13,26 @@ from pathlib import Path
 TWO_DAYS = 2 * 24 * 60
 
 
-def write_slurm_template(script, out_path, arguments,
-                         n_threads, gpu_type, n_gpus,
-                         mem_limit, time_limit, qos,
-                         exclude_nodes, mail_address, array):
+def write_slurm_template(
+    script,
+    out_path,
+    arguments,
+    n_threads,
+    gpu_type,
+    n_gpus,
+    mem_limit,
+    time_limit,
+    qos,
+    exclude_nodes,
+    mail_address,
+    array,
+    slurm_out_to_scratch,
+):
     user = pwd.getpwuid(os.getuid()).pw_name
-    slurm_out = Path(f"/scratch/{user}/slurm_out")
-    slurm_out.mkdir(parents=True, exist_ok=True)
     slurm_template = (
         f"#!/bin/bash\n"
         f"#SBATCH -A kreshuk\n"
         f"#SBATCH -N 1\n"
-        f"#SBATCH -o {slurm_out / '%N.%j.out'}\n"
-        f"#SBATCH -e {slurm_out / '%N.%j.err'}\n"
         f"#SBATCH -c {n_threads}\n"
         f"#SBATCH --mem {mem_limit}\n"
         f"#SBATCH -t {time_limit}\n"
@@ -34,7 +41,13 @@ def write_slurm_template(script, out_path, arguments,
         f"#SBATCH -C gpu={gpu_type}\n"
         f"#SBATCH --gres=gpu:{n_gpus}\n"
     )
-    if mail_address is None and os.environ.get('GPU_ENV_SEND_MAIL', False):
+    if slurm_out_to_scratch:
+        slurm_out = Path(f"/scratch/{user}/slurm_out")
+        slurm_out.mkdir(parents=True, exist_ok=True)
+        slurm_template += f"#SBATCH -o {slurm_out / '%N.%j.out'}\n"
+        slurm_template += f"#SBATCH -e {slurm_out / '%N.%j.err'}\n"
+
+    if mail_address is None and os.environ.get("GPU_ENV_SEND_MAIL", False):
         mail_address = f"{user}@embl.de"
 
     if mail_address is not None:
@@ -57,11 +70,20 @@ def write_slurm_template(script, out_path, arguments,
         f.write(slurm_template)
 
 
-def submit_slurm(script, input_, n_threads=7, n_gpus=1,
-                 gpu_type='2080Ti', mem_limit='64G',
-                 time_limit=TWO_DAYS, qos='normal',
-                 mail_address=None, array=None,
-                 exclude_nodes=None):
+def submit_slurm(
+    script,
+    input_,
+    n_threads=7,
+    n_gpus=1,
+    gpu_type="2080Ti",
+    mem_limit="64G",
+    time_limit=TWO_DAYS,
+    qos="normal",
+    mail_address=None,
+    array=None,
+    exclude_nodes=None,
+    slurm_out_to_scratch: bool = False,
+):
     """ Submit python script that needs gpus with given inputs on a slurm node.
     """
 
@@ -77,14 +99,23 @@ def submit_slurm(script, input_, n_threads=7, n_gpus=1,
     batch_script = os.path.join(tmp_folder, f'{os.path.splitext(script_name)[0]}_{dt}.sh')
 
     print("Batch script saved at", batch_script)
-    write_slurm_template(script, batch_script, arguments,
-                         int(n_threads), gpu_type, int(n_gpus),
-                         mem_limit, int(time_limit), qos,
-                         exclude_nodes=exclude_nodes,
-                         mail_address=mail_address,
-                         array=array)
+    write_slurm_template(
+        script,
+        batch_script,
+        arguments,
+        int(n_threads),
+        gpu_type,
+        int(n_gpus),
+        mem_limit,
+        int(time_limit),
+        qos,
+        exclude_nodes=exclude_nodes,
+        mail_address=mail_address,
+        array=array,
+        slurm_out_to_scratch=slurm_out_to_scratch,
+    )
 
-    cmd = ['sbatch', '-J', script_name, batch_script]
+    cmd = ["sbatch", "-J", script_name, batch_script]
     subprocess.run(cmd)
 
 

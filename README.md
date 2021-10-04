@@ -18,15 +18,16 @@ and they map to gpu tpyes like this:
 
 To set up an environment for one of these architectures call
 ```
-setup_env.sh ARCH_NAME [ENV_NAME_PREFIX] [PATH_TO_BASE_ENV.YAML]
+setup_env.sh ARCH_NAME [ENV_NAME_PREFIX] [PATH_TO_BASE_ENV.YAML] [mamba|conda(default)]
 ```
 Note that this will submit a job to the cluster, so it should be run from the `login.cluster.embl` node.
 
 You can modify the environment that wil be set up by:
 - Adding / removing conda pacakges from `base-env.yaml` (or specifying ENV_NAME_PREFIX and PATH_TO_BASE_ENV.YAML)
-- Adding / removing packages that will be linked into the environment in `util/link_pacakges.py`
+- Adding / removing packages that will be linked into the environment in `util/link_packages.py`
 - Enable / disable building nvidia apex by calling `util/install_apex.sh` in the batch script. (Other pip build dependencies can be added in an analogous manner).
 
+You may also choose `mamba` (instead of the default `conda`) to resolve the base environment.
 
 ## Using the environments
 

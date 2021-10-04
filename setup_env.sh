@@ -13,8 +13,13 @@ else
   BASE_ENV="base-env.yaml"
 fi
 
+if [ $# -gt 3 ]; then
+  CONDA_CMD=$4
+else
+  CONDA_CMD=conda
+fi
 
-conda env create -f "$BASE_ENV" -n "${ENV_NAME}_$ARCH_NAME"
+$CONDA_CMD env create -f "$BASE_ENV" -n "${ENV_NAME}_$ARCH_NAME"
 
 # if the conda environment was already present its creation will have failed
 ENV_CREATED=$?

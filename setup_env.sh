@@ -14,7 +14,7 @@ else
 fi
 
 
-conda env create -f "$BASE_ENV" -n "${ENV_NAME}_$ARCH_NAME"
+mamba env create -f "$BASE_ENV" -n "${ENV_NAME}_$ARCH_NAME"
 
 # if the conda environment was already present its creation will have failed
 ENV_CREATED=$?

@@ -25,7 +25,7 @@ ENV_NAME="${ENV_NAME}_$ARCH_NAME"
 
 # go to base env and derive the python executable of $ENV_NAME from it
 # (source activate $ENV_NAME && PY=$(which python) is not 100% reliable, because it sometimes picks up the base env's python)
-source activate
+source activate base
 
 PY=$(which python)
 PY=$(dirname $(dirname ${PY}))

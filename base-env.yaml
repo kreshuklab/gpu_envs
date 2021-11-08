@@ -1,9 +1,8 @@
 name: cluster_gpu_skylake  # skylake is the architecture for the kreshuk gpu nodes (gpu6 / gpu7)
 
 channels:
-  - pytorch
-  - nvidia
   - conda-forge
+  - pyg
 
 dependencies:
   - cudatoolkit >=11.1,<11.2
@@ -12,7 +11,9 @@ dependencies:
   - luigi
   - pip
   - python 3.8
+  - nifty 1.1.0=*_1
   - pytorch
+  - pyg
   - pyyaml
   - napari
   - jupyter
@@ -22,6 +23,7 @@ dependencies:
   - tensorboard
   - torchvision
   - tqdm
+  - wandb
   - zarr
   - pip:
       - kornia

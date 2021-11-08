@@ -6,7 +6,8 @@
 #SBATCH -t 0-2:00
 #SBATCH -p gpu
 #SBATCH -w gpu11
+#sbatch --qos highest
 
 source activate "$1_rome"
 python setup_env.py
-./util/install_apex.sh
+# ./util/install_apex.sh

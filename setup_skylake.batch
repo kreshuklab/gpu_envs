@@ -5,7 +5,7 @@
 #SBATCH -c 6
 #SBATCH -t 0-2:00
 #SBATCH -p gpu
-#SBATCH -w gpu8
+#SBATCH -w gpu9
 #sbatch --qos highest
 
 source activate "$1_skylake"

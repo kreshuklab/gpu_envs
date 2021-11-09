@@ -52,5 +52,6 @@ def link_build_packages():
 
 
 def link_all():
-    link_noarch_packages()
+    pass
+    # link_noarch_packages()
     # link_build_packages()

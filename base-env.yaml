@@ -3,9 +3,12 @@ name: cluster_gpu_skylake  # skylake is the architecture for the kreshuk gpu nod
 channels:
   - conda-forge
   - pyg
+  - cpape
 
 dependencies:
+  - affogato
   - cudatoolkit >=11.1,<11.2
+  - elf >=0.3.0
   - dill
   - h5py
   - luigi
